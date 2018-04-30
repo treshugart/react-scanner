@@ -1,0 +1,17 @@
+{
+  "name": "react-scanner",
+  "version": "1.0.0",
+  "description": "A CLI utility and library for finding and gathering info about react components on any given web page.",
+  "main": "index.js",
+  "dependencies": {
+    "puppeteer": "^1.2.0",
+    "react": "^16.3.1",
+    "react-dom": "^16.3.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Trey Shugart <treshugart@gmail.com>",
+  "license": "MIT"
+}
