@@ -1,81 +1,30 @@
 #!/usr/bin/env node
 
+const fs = require("fs-extra");
 const puppeteer = require("puppeteer");
-const url = "http://ak-mk-2-prod.netlify.com/";
-
-function evaluate() {
-  // ## Utils
-
-  function extractDataFromNode(node) {
-    return node.tagName;
-  }
-
-  function extractDataFromRoot(node) {
-    return node.tagName;
-  }
-
-  function getDisplayNameFromNode(node) {
-    return node.tagName;
-  }
-
-  function getReactInternalInstanceKey(node) {
-    for (const key in node) {
-      if (key.indexOf("__reactInternalInstance") === 0) {
-        return key;
-      }
-    }
-  }
-
-  function findNodes(root, test, func) {
-    const nodes = [];
-    walk(root, node => {
-      const data = test(node);
-      if (data) {
-        nodes.push(func(node, data));
-      }
-    });
-    return nodes;
-  }
-
-  function findReactNodes(root) {
-    return findNodes(root, getReactInternalInstanceKey, node => node);
-  }
-
-  function findReactRoots(root) {
-    return findNodes(root, node => node._reactRootContainer, node => node);
-  }
-
-  function findReactRootsAndNodes(root) {
-    const roots = [];
-    findReactRoots(root).forEach(root =>
-      roots.push({
-        root: extractDataFromRoot(root),
-        nodes: findReactNodes(root).map(extractDataFromNode)
-      })
-    );
-    return roots;
-  }
-
-  function walk(root, func) {
-    const tree = document.createTreeWalker(root);
-    while (tree.nextNode()) {
-      func(tree.currentNode);
-    }
-  }
-
-  // ## Finding
-
-  return findReactRootsAndNodes(document.body);
-}
+const reactTreeWalker = require("react-tree-walker");
+const { zeropack } = require("zeropack");
+const url = "http://ak-mk-2-prod.netlify.com/packages/core/button";
 
 (async function invokePuppeteer() {
-  const browser = await puppeteer.launch();
+  // We generate a bundle that we can inject into the browser. This allows us
+  // to use dependencies we otherwise couldn't because all we'd have available
+  // is browser globals.
+  await zeropack({
+    browser: "./dist/index.js",
+    externals: [],
+    source: "./src/browser.js"
+  });
+  const script = (await fs.readFile("./dist/index.js")).toString();
+  const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
 
   await page.goto(url);
-  const res = await page.evaluate(evaluate);
 
-  console.log(res);
+  // This injects the bundle script and evaluates it.
+  const res = await page.evaluate(script);
+
+  console.log(JSON.stringify(res, null, 2));
 
   await browser.close();
 })();

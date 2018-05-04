@@ -4,9 +4,12 @@
   "description": "A CLI utility and library for finding and gathering info about react components on any given web page.",
   "main": "index.js",
   "dependencies": {
+    "fs-extra": "^6.0.0",
     "puppeteer": "^1.2.0",
     "react": "^16.3.1",
-    "react-dom": "^16.3.1"
+    "react-dom": "^16.3.2",
+    "react-tree-walker": "^4.0.2",
+    "zeropack": "^0.4.1"
   },
   "devDependencies": {},
   "scripts": {
