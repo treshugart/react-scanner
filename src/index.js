@@ -6,7 +6,7 @@ const reactTreeWalker = require("react-tree-walker");
 const { zeropack } = require("zeropack");
 const url = "http://ak-mk-2-prod.netlify.com/packages/core/button";
 
-(async function invokePuppeteer() {
+async function compile() {
   // We generate a bundle that we can inject into the browser. This allows us
   // to use dependencies we otherwise couldn't because all we'd have available
   // is browser globals.
@@ -16,13 +16,26 @@ const url = "http://ak-mk-2-prod.netlify.com/packages/core/button";
     source: "./src/browser.js"
   });
   const script = (await fs.readFile("./dist/index.js")).toString();
-  const browser = await puppeteer.launch({ headless: false });
+  return wrapInIife(script);
+}
+
+function wrapInIife(script) {
+  return new Function(`
+    return (async () => {
+      let __exports = null;
+      ${script}
+      return await __exports;
+    })();
+  `);
+}
+
+(async function invokePuppeteer() {
+  const browser = await puppeteer.launch({ dumpip: true, headless: true });
   const page = await browser.newPage();
 
   await page.goto(url);
 
-  // This injects the bundle script and evaluates it.
-  const res = await page.evaluate(script);
+  const res = await page.evaluate(await compile());
 
   console.log(JSON.stringify(res, null, 2));
 
