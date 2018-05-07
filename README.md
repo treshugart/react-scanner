@@ -25,6 +25,7 @@ _This method only yielded the usage of a single component on the Atlaskit websit
 
 ### Next steps
 
+* I want to see if there's a hybrid approach where we can traverse both the internal react tree, `children` props and the real DOM tree and somehow piece that together. The libraries I've tried _should_ do this but are erroring out for cryptic reasons.
 * I don't know. It feels like I've exhausted the viable options. Most information on this subject is in the context of testing, as opposed to scraping DOMs. In those scenarios, the recommendation has always been "don't use the DOM as the source of truth." However, we _need_ to do this to get real world usage.
 * An alternative approach might be to hit `package.json` files directly and see if certain deps are in them, but this doesn't represent real-world usage because you're just seening what's there.
 
