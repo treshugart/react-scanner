@@ -1,11 +1,4 @@
-import { findAllInRenderedTree } from "react-dom/test-utils";
-import findRoots from "./find-roots";
+import roots from "./roots";
+import walk from "./w";
 
-let nodes = [];
-for (const root of findRoots(document.body)) {
-  nodes = nodes.concat(
-    findAllInRenderedTree(root.child.child.stateNode, () => true)
-  );
-}
-
-__exports = nodes;
+__exports = walk(roots(document.body)[0].child.child.stateNode);

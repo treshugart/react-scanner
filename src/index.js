@@ -3,6 +3,7 @@
 const fs = require("fs-extra");
 const puppeteer = require("puppeteer");
 const reactTreeWalker = require("react-tree-walker");
+const request = require("request");
 const { zeropack } = require("zeropack");
 const url = "http://ak-mk-2-prod.netlify.com/packages/core/button";
 
@@ -32,6 +33,24 @@ function wrapInIife(script) {
 (async function invokePuppeteer() {
   const browser = await puppeteer.launch({ dumpip: true, headless: true });
   const page = await browser.newPage();
+
+  // await page.setRequestInterception(true);
+  // page.on("request", req => {
+  //   request(
+  //     {
+  //       body: req.postData(),
+  //       headers: req.headers(),
+  //       method: req.method(),
+  //       url: req.url()
+  //     },
+  //     (err, res) => {
+  //       req.respond({
+  //         body: res.body,
+  //         headers: res.headers
+  //       });
+  //     }
+  //   );
+  // });
 
   await page.goto(url);
 

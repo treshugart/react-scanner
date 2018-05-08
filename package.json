@@ -6,15 +6,23 @@
   "dependencies": {
     "fs-extra": "^6.0.0",
     "puppeteer": "^1.2.0",
-    "react": "^16.3.1",
-    "react-dom": "^16.3.2",
     "react-tree-walker": "^4.0.2",
+    "request": "^2.85.0",
     "zeropack": "^0.4.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "jest": "^22.4.3",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Trey Shugart <treshugart@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "babel": {
+    "presets": ["env", "react"]
+  }
 }
