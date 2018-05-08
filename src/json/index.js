@@ -1,5 +1,13 @@
-export function isSimple(type) {
-  return typeof type === "number" || typeof type === "string";
+export function isEmpty(node) {
+  return node == null;
+}
+
+export function isSimple(node) {
+  return (
+    typeof node === "boolean" ||
+    typeof node === "number" ||
+    typeof node === "string"
+  );
 }
 
 export function getChildrenFromChild(node) {
@@ -46,13 +54,25 @@ export function getReactInternalRoot(node) {
   );
 }
 
+export function findReactInternalRoots(node) {
+  const roots = [];
+  const tree = document.createTreeWalker(node);
+  while (tree.nextNode()) {
+    const root = getReactInternalRoot(tree.currentNode);
+    if (root) {
+      roots.push(root);
+    }
+  }
+  return roots.filter(Boolean);
+}
+
 export default function json(node) {
-  // Return simple data types.
-  if (isSimple(node)) {
+  // Return empty and simple nodes.
+  if (isEmpty(node) || isSimple(node)) {
     return node;
   }
 
-  // Memoized props may also be simple.
+  // Memoized props may also be simple, but we don't return if they're empty.
   if (isSimple(node.memoizedProps)) {
     return node.memoizedProps;
   }

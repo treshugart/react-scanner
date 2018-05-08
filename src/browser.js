@@ -1,4 +1,3 @@
-import roots from "./roots";
-import walk from "./w";
+import json, { findReactInternalRoots } from "./json";
 
-__exports = walk(roots(document.body)[0].child.child.stateNode);
+__exports = findReactInternalRoots(document.body).map(json);

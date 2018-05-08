@@ -34,29 +34,11 @@ function wrapInIife(script) {
   const browser = await puppeteer.launch({ dumpip: true, headless: true });
   const page = await browser.newPage();
 
-  // await page.setRequestInterception(true);
-  // page.on("request", req => {
-  //   request(
-  //     {
-  //       body: req.postData(),
-  //       headers: req.headers(),
-  //       method: req.method(),
-  //       url: req.url()
-  //     },
-  //     (err, res) => {
-  //       req.respond({
-  //         body: res.body,
-  //         headers: res.headers
-  //       });
-  //     }
-  //   );
-  // });
-
   await page.goto(url);
 
   const res = await page.evaluate(await compile());
 
-  console.log(JSON.stringify(res, null, 2));
+  console.log(JSON.stringify(res));
 
   await browser.close();
 })();

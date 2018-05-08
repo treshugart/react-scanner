@@ -238,6 +238,17 @@ test("multiple children", () => {
   });
 });
 
+test("simple values are passed through", () => {
+  expect(json(null)).toBe(null);
+  expect(json(undefined)).toBe(undefined);
+  expect(json(false)).toBe(false);
+  expect(json(0)).toBe(0);
+  expect(json(true)).toBe(true);
+  expect(json(1)).toBe(1);
+  expect(json("")).toBe("");
+  expect(json("string")).toBe("string");
+});
+
 test.skip("fragments", () => {
   const root = tree(
     <Fragment>
