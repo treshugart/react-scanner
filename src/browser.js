@@ -2,6 +2,10 @@ import { walk, getDisplayName, findReactInternalRoots } from "./json";
 
 __exports = [];
 
+function computeDimension(a, b) {
+  return a < b ? a : b;
+}
+
 for (const root of findReactInternalRoots(document.body)) {
   walk(root, node => {
     const displayName = getDisplayName(node);
@@ -14,6 +18,14 @@ for (const root of findReactInternalRoots(document.body)) {
         if (dom && dom.tagName) {
           const label = document.createElement("div");
           const wrapper = document.createElement("div");
+          const computedHeight = computeDimension(
+            window.innerHeight,
+            dom.offsetHeight
+          );
+          const computedWidth = computeDimension(
+            window.innerWidth,
+            dom.offsetWidth
+          );
 
           document.body.appendChild(label);
           document.body.appendChild(wrapper);
@@ -26,11 +38,11 @@ for (const root of findReactInternalRoots(document.body)) {
           label.style.top = `${dom.offsetTop + 3}px`;
 
           wrapper.style.border = "3px solid red";
-          wrapper.style.height = `${dom.offsetHeight - 6}px`;
+          wrapper.style.height = `${computedHeight - 6}px`;
           wrapper.style.left = dom.offsetLeft;
           wrapper.style.position = "absolute";
           wrapper.style.top = dom.offsetTop;
-          wrapper.style.width = `${dom.offsetWidth - 6}px`;
+          wrapper.style.width = `${computedWidth - 6}px`;
 
           label.textContent = displayName;
         }
