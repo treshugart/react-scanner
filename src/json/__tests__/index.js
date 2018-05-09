@@ -1,4 +1,4 @@
-import json from "..";
+import { json } from "..";
 import React, { Component, Fragment } from "react";
 import { render } from "react-dom";
 

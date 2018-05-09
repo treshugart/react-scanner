@@ -10,6 +10,17 @@ export function isSimple(node) {
   );
 }
 
+export function getChildren(node) {
+  if (node.child) {
+    return getChildrenFromChild(node.child);
+  } else if (node.memoizedProps) {
+    return getChildrenFromProps(node.memoizedProps);
+  } else if (node.props) {
+    return getChildrenFromProps(node.props);
+  }
+  return [];
+}
+
 export function getChildrenFromChild(node) {
   const children = [];
   while (node) {
@@ -23,21 +34,14 @@ export function getChildrenFromProps(props) {
   return Array.isArray(props.children) ? props.children : [props.children];
 }
 
-export function getChildrenFromNode(node) {
-  if (node.child) {
-    return getChildrenFromChild(node.child);
-  } else if (node.memoizedProps) {
-    return getChildrenFromProps(node.memoizedProps);
-  } else if (node.props) {
-    return getChildrenFromProps(node.props);
+export function getDisplayName(node) {
+  if (!node.type) {
+    return null;
   }
-  return [];
-}
-
-export function getDisplayNameFromNode(node) {
-  return node.type
-    ? node.type.displayName || node.type.name || node.type
-    : null;
+  if (typeof node.type === "string") {
+    return node.type;
+  }
+  return node.type.displayName || node.type.name || "[anonymous]";
 }
 
 export function getReactInternalInstance(node) {
@@ -66,7 +70,24 @@ export function findReactInternalRoots(node) {
   return roots.filter(Boolean);
 }
 
-export default function json(node) {
+export function walk(root, call) {
+  // Skip empty nodes.
+  if (isEmpty(root)) return;
+
+  // Allow returning false to throw out the inclusive tree.
+  if (call(root) === false) return;
+
+  // Recursively walk children.
+  getChildren(root).forEach(node => {
+    // We add the parent node so we can look up in the tree if need be.
+    if (!isEmpty(node) && typeof node === "object") {
+      node.parent = root;
+    }
+    walk(node, call);
+  });
+}
+
+export function json(node) {
   // Return empty and simple nodes.
   if (isEmpty(node) || isSimple(node)) {
     return node;
@@ -79,7 +100,7 @@ export default function json(node) {
 
   // In the last case we generate data for the corresponding React node.
   return {
-    children: getChildrenFromNode(node).map(json),
-    name: getDisplayNameFromNode(node)
+    children: getChildren(node).map(json),
+    name: getDisplayName(node)
   };
 }

@@ -31,14 +31,13 @@ function wrapInIife(script) {
 }
 
 (async function invokePuppeteer() {
-  const browser = await puppeteer.launch({ dumpip: true, headless: true });
+  const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
   await page.goto(url);
 
   const res = await page.evaluate(await compile());
 
-  console.log(JSON.stringify(res));
-
+  await page.screenshot({ path: "./screnshot.png" });
   await browser.close();
 })();
