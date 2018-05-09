@@ -1,12 +1,14 @@
-import { walk, getDisplayName, findReactInternalRoots } from "./json";
+import { json, walk, getDisplayName, findReactInternalRoots } from "./json";
 
-__exports = [];
+const roots = findReactInternalRoots(document.body);
+
+__exports = roots.map(json);
 
 function computeDimension(a, b) {
   return a < b ? a : b;
 }
 
-for (const root of findReactInternalRoots(document.body)) {
+for (const root of roots) {
   walk(root, node => {
     const displayName = getDisplayName(node);
     if (!displayName) return;

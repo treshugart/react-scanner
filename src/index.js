@@ -35,9 +35,7 @@ function wrapInIife(script) {
   const page = await browser.newPage();
 
   await page.goto(url);
-
-  const res = await page.evaluate(await compile());
-
+  await page.evaluate(await compile());
   await page.screenshot({ path: "./screnshot.png" });
   await browser.close();
 })();
