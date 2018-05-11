@@ -2,8 +2,6 @@
 
 const crawler = require("headless-chrome-crawler");
 const fs = require("fs-extra");
-const reactTreeWalker = require("react-tree-walker");
-const request = require("request");
 const { zeropack } = require("zeropack");
 
 const url = "http://ak-mk-2-prod.netlify.com/";

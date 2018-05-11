@@ -1,6 +1,12 @@
-import { json, walk, getDisplayName, findReactInternalRoots } from "./json";
+import {
+  json,
+  walk,
+  getDisplayName,
+  getDomNode,
+  findRoots
+} from "react-dom-walker";
 
-const roots = findReactInternalRoots(document.body);
+const roots = findRoots(document.body);
 
 __exports = {
   react: roots.map(json)
@@ -18,8 +24,8 @@ for (const root of roots) {
     if (displayNameLc.indexOf("ak") === 0) {
       let parent = node.parent;
       while (parent) {
-        const dom = parent.stateNode;
-        if (dom && dom.tagName) {
+        const dom = getDomNode(parent);
+        if (dom) {
           const label = document.createElement("div");
           const wrapper = document.createElement("div");
           const computedHeight = computeDimension(
