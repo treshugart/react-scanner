@@ -2,7 +2,9 @@ import { json, walk, getDisplayName, findReactInternalRoots } from "./json";
 
 const roots = findReactInternalRoots(document.body);
 
-__exports = roots.map(json);
+__exports = {
+  react: roots.map(json)
+};
 
 function computeDimension(a, b) {
   return a < b ? a : b;
